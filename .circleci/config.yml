@@ -11,7 +11,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install pyyaml
+            pip install pyyaml xmlrunner
       - save_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}
           paths:
