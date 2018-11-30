@@ -1,4 +1,5 @@
 import os
+import glob
 import yaml
 import copy
 import logging
@@ -51,8 +52,8 @@ class PKG(object):
 
         config_path = os.path.join(self.__config_path, stage)
         
-        if os.path.exists(config_path) and os.listdir(config_path) != []:
-            file_list = os.listdir(config_path)
+        if os.path.exists(config_path) and glob.glob(config_path + '/*.yaml') != []:
+            file_list = glob.glob(config_path + '/*.yaml')
         else:
             self.__logger.info('Path not found')
             raise FileNotFoundError
@@ -60,12 +61,10 @@ class PKG(object):
         config = {}
 
         for _file in file_list:
-            if _file[-4:] == 'yaml':
-                path = os.path.join(config_path, _file)
-                yaml_content = self.__parse_yaml_file(path, stage)
-                if yaml_content is None:
-                    self.__logger.info('Incorrect yaml content: %s' % path)
-                    raise ValueError
+            yaml_content = self.__parse_yaml_file(_file, stage)
+            if yaml_content is None:
+                self.__logger.info('Incorrect yaml content: %s' % _file)
+                raise ValueError
             
             config = self.__merge(config, yaml_content)
 
