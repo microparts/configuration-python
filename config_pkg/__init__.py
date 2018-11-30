@@ -60,11 +60,12 @@ class PKG(object):
         config = {}
 
         for _file in file_list:
-            path = os.path.join(config_path, _file)
-            yaml_content = self.__parse_yaml_file(path, stage)
-            if yaml_content is None:
-                self.__logger.info('Incorrect yaml content: %s' % path)
-                raise ValueError
+            if _file[-4:] == 'yaml':
+                path = os.path.join(config_path, _file)
+                yaml_content = self.__parse_yaml_file(path, stage)
+                if yaml_content is None:
+                    self.__logger.info('Incorrect yaml content: %s' % path)
+                    raise ValueError
             
             config = self.__merge(config, yaml_content)
 
