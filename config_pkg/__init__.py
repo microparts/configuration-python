@@ -83,8 +83,15 @@ class PKG(object):
                 if key in stage_config:
                     default_config[key] = self.__merge(default_config[key], stage_config[key])
             elif type(default_config[key]) is list:
-                if key in stage_config:
-                    default_config[key] = list(set(default_config[key] + stage_config[key])) 
+                arr = []
+                for item in default_config[key]:
+                    if item not in arr:
+                        arr.append(default_config[key])
+                for item in stage_config[key]:
+                    if item not in arr:
+                        arr.append(stage_config[key])
+
+                default_config[key] = arr
             elif type(default_config[key]) is str:
                 if key in stage_config:
                     default_config[key] = stage_config[key]
