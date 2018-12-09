@@ -86,11 +86,10 @@ class PKG(object):
                 arr = []
                 for item in default_config[key]:
                     if item not in arr:
-                        arr.append(default_config[key])
-                for item in stage_config[key]:
+                        arr.append(item)
+                for item in stage_config.get(key, []):
                     if item not in arr:
-                        arr.append(stage_config[key])
-
+                        arr.append(item)
                 default_config[key] = arr
             elif type(default_config[key]) is str:
                 if key in stage_config:
