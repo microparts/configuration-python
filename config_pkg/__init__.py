@@ -67,7 +67,6 @@ class PKG(object):
                 raise ValueError
             
             config = self.__merge(config, yaml_content)
-
         return config
 
     def __merge(self, default_config: dict, stage_config: dict):
@@ -91,10 +90,9 @@ class PKG(object):
                     if item not in arr:
                         arr.append(item)
                 default_config[key] = arr
-            elif type(default_config[key]) is str:
+            else:
                 if key in stage_config:
                     default_config[key] = stage_config[key]
-        
         for key in stage_config:
             if key not in default_config:
                 default_config[key] = stage_config[key]
