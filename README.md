@@ -78,4 +78,4 @@ That all.
 
 ## License
 
-GNU GPL v3
+MIT
