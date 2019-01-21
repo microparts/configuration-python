@@ -7,13 +7,21 @@ import logging
 
 class PKG(object):
     def __init__(self, config_path: str=None, stage: str=None, logger=None):
-        self.__config_path = config_path if config_path is not None else os.getenv('CONFIG_PATH', '/configuration') 
-        self.__stage = stage if stage is not None else os.getenv('STAGE', 'defaults')
+        self.__config_path = config_path or os.getenv('CONFIG_PATH', '/configuration') 
+        self.__stage = stage or os.getenv('STAGE', 'defaults')
         
         self.__logger = logger or logging.getLogger('dummy')
         
         self.__logger.info('CONFIG_PATH: %s' % config_path)
         self.__logger.info('STAGE: %s' % stage)
+
+    @property
+    def config_path(self):
+        return self.__config_path
+
+    @property
+    def stage(self):
+        return self.__stage
 
     def load(self):
         """Initialize all the magic down here"""
@@ -36,18 +44,18 @@ class PKG(object):
 
         return config
 
-    def get_all(self):
+    def get_all(self) -> dict:
         """Gets all the tree config"""
 
         return self.__config
 
-    def __load_defaults(self):
+    def __load_defaults(self) -> dict:
         return self.__parse_configuration()
 
     def __load_stage(self):
         return self.__parse_configuration(self.__stage)
 
-    def __parse_configuration(self, stage: str='defaults'):
+    def __parse_configuration(self, stage: str='defaults') -> dict:
         """Parses configuration and makes a tree of it"""
 
         config_path = os.path.join(self.__config_path, stage)
@@ -69,7 +77,7 @@ class PKG(object):
             config = self.__merge(config, yaml_content)
         return config
 
-    def __merge(self, default_config: dict, stage_config: dict):
+    def __merge(self, default_config: dict, stage_config: dict) -> dict:
         """Merges any number of arrays/parameters recursively.
         
         Replacing entries with string keys with values from latter arrays.
@@ -81,15 +89,6 @@ class PKG(object):
             if type(default_config[key]) is dict:
                 if key in stage_config:
                     default_config[key] = self.__merge(default_config[key], stage_config[key])
-            elif type(default_config[key]) is list:
-                arr = []
-                for item in default_config[key]:
-                    if item not in arr:
-                        arr.append(item)
-                for item in stage_config.get(key, []):
-                    if item not in arr:
-                        arr.append(item)
-                default_config[key] = arr
             else:
                 if key in stage_config:
                     default_config[key] = stage_config[key]
