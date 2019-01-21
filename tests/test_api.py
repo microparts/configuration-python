@@ -7,11 +7,25 @@ class TestAPI(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
-    def test_merge(self):
-        os.environ['STAGE'] = 'test'
+    def test_init_from_env(self):
         os.environ['CONFIG_PATH'] = 'configuration'
-        
+        os.environ['STAGE'] = 'test'
+
         pkg = PKG()
+        pkg.load()
+
+        self.assertEqual(pkg.config_path, 'configuration')
+        self.assertEqual(pkg.stage, 'test')
+    
+    def test_init_from_params(self):
+        pkg = PKG('configuration', 'test')
+        pkg.load()
+
+        self.assertEqual(pkg.config_path, 'configuration')
+        self.assertEqual(pkg.stage, 'test')
+
+    def test_merge(self):
+        pkg = PKG('configuration', 'test')
         pkg.load()
 
         self.assertEqual(pkg.get_all(), {
@@ -26,7 +40,8 @@ class TestAPI(unittest.TestCase):
                     "key": "value_overwrite",
                     "key2": "value_overwrite2",
                     "key3": "value_overwrite3",
-                    "key4": [1, 2, 3, 5, 6]
+                    "key4": [1, 5, 6],
+                    "empty_arr": [1]
                 },
                 "key4": "value4",
                 "key5": "value5",
@@ -35,10 +50,7 @@ class TestAPI(unittest.TestCase):
         )
 
     def test_defaults_stage(self):
-        os.environ['STAGE'] = 'defaults'
-        os.environ['CONFIG_PATH'] = 'configuration'
-        
-        pkg = PKG()
+        pkg = PKG('configuration', 'defaults')
         pkg.load()
         
         self.assertEqual(pkg.get_all(), {
@@ -53,7 +65,8 @@ class TestAPI(unittest.TestCase):
                     "key": "value",
                     "key2": "value2",
                     "key3": "value3",
-                    "key4": [1, 2, 3]
+                    "key4": [1, 2, 3],
+                    "empty_arr": []
                 },
             }
         )
