@@ -7,13 +7,15 @@ import logging
 
 class PKG(object):
     def __init__(self, config_path: str=None, stage: str=None, logger=None):
-        self.__config_path = config_path or os.getenv('CONFIG_PATH', '/configuration') 
+        self.__config_path = config_path or os.getenv('CONFIG_PATH', '/app/configuration') 
         self.__stage = stage or os.getenv('STAGE', 'defaults')
         
         self.__logger = logger or logging.getLogger('dummy')
         
         self.__logger.info('CONFIG_PATH: %s' % config_path)
         self.__logger.info('STAGE: %s' % stage)
+
+        self.__config = {}
 
     @property
     def config_path(self):
