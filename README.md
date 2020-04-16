@@ -3,6 +3,10 @@ Python Microservice configuration module
 
 [![CircleCI](https://circleci.com/gh/microparts/configuration-python/tree/master.svg?style=svg)](https://circleci.com/gh/microparts/configuration-python/tree/master)
 
+
+THIS PACKAGE PERMANENTLY MOVED TO https://github.com/spacetab-io/configuration-python
+___________________
+
 Configuration module for microservices written on Python. Specially created
 for follow up corporate standards of application configuration.
 
